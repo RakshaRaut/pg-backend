@@ -20,6 +20,7 @@ model Device {
   id        Int      @id @default(autoincrement())
   name      String
   deviceKey String   @unique
+  thingsboardId String?
   type      String
   location  String?
   status    String   @default("offline")
