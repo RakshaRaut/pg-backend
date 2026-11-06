@@ -1,27 +1,22 @@
-import {IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateDeviceDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
   deviceKey: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
   type: string;
 
   @IsOptional()
-  @IsString()
-  status?: string;
-
-  @IsOptional()
-  @IsString()
+  @MaxLength(200)
   location?: string;
-
-  @IsInt()
-  @Min(1)
-  userId: number;
 }
