@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtSignOptions } from '@nestjs/jwt';
 
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
@@ -15,7 +15,9 @@ import { JwtStrategy } from './strategy/jwt.strategy.js';
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: '15m',
+          expiresIn:
+            configService.get<JwtSignOptions['expiresIn']>('JWT_EXPIRES_IN') ??
+            '15m',
         },
       }),
     }),

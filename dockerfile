@@ -4,13 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/iot_monitoring?schema=public
-
-RUN npx prisma generate
+RUN DATABASE_URL=postgresql://postgres:build-only@localhost:5432/iot_monitoring npx prisma generate
 
 RUN npm run build
 

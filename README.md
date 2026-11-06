@@ -31,6 +31,32 @@
 $ npm install
 ```
 
+## Docker configuration
+
+Keep development and production values in separate, untracked files:
+
+```bash
+cp .env.development.example .env.development
+docker compose --env-file .env.development up -d --build
+```
+
+For production, use `.env.production` with real secrets and run the same
+command with `--env-file .env.production`. Never commit either file.
+
+The backend health endpoint is available at `/api/health` and verifies both the
+HTTP process and its PostgreSQL connection.
+
+When running the backend locally with `npm run start:dev`, stop the Docker
+backend first or choose another host port for Docker:
+
+```bash
+BACKEND_HOST_PORT=3001 docker compose up -d backend
+npm run start:dev
+```
+
+The container continues to listen on port `3000` internally; only the host
+port changes.
+
 ## Compile and run the project
 
 ```bash
@@ -56,6 +82,26 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+The database is intentionally empty after migrations. Register a user through
+the frontend, then create devices from the Devices page. Device creation is
+coordinated by the backend: it creates the ThingsBoard device first and stores
+the returned ThingsBoard ID with the PostgreSQL record.
+
+Authenticated device APIs:
+
+- `GET /api/devices`
+- `GET /api/devices/telemetry`
+- `POST /api/devices`
+- `PATCH /api/devices/:id`
+- `DELETE /api/devices/:id`
+- `POST /api/devices/:id/telemetry`
+
+For the included simulator, set `TELEMETRY_JWT_TOKEN` to a JWT issued by the
+backend and `TELEMETRY_DEVICE_ID` to the PostgreSQL device ID. It will publish
+through NestJS, which forwards the readings to ThingsBoard. The simulator stays
+idle when neither backend credentials nor a direct ThingsBoard token are
+configured; it never creates devices or sample data.
 
 ## Deployment
 

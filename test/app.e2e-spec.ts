@@ -23,6 +23,10 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 
+  it('/favicon.ico (GET)', () => {
+    return request(app.getHttpServer()).get('/favicon.ico').expect(204);
+  });
+
   afterEach(async () => {
     await app.close();
   });
